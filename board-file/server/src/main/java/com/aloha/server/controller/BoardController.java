@@ -1,8 +1,8 @@
 package com.aloha.server.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,34 +25,35 @@ import com.aloha.server.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@CrossOrigin(origins = "*")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/boards")
 public class BoardController {
-
-    @Autowired
-    private BoardService boardService;
     
     @Autowired
+    private BoardService boardService;
+
+    @Autowired
     private FileService fileService;
+
+
     @GetMapping()
     public ResponseEntity<?> getAll() {
-        log.info("전체 게시글 목록 요청");
         try {
-            List<Board> boardList = boardService.list();
-            return new ResponseEntity<>(boardList, HttpStatus.OK);
+            List <Board> BoardList = boardService.list();
+            return new ResponseEntity<>(BoardList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
     @GetMapping("/{no}")
-    public ResponseEntity<?> getOne(@PathVariable("no") Integer no) {
-        log.info("{}번 게시글 요청", no);
+    public ResponseEntity<?> getOne(@PathVariable("no") int no) {
         try {
-            // 🎫 게시글
+            // 게시글 
             Board board = boardService.select(no);
-            // 📄 파일 목록
+
+            // 파일 목록
             Files file = new Files();
             file.setParentTable("board");
             file.setParentNo(no);
@@ -73,36 +74,38 @@ public class BoardController {
     public ResponseEntity<?> create(Board board) {                      // Content-Type : multipart/form-data
         try {
             Board newBoard = boardService.insert(board);
-            if(newBoard != null)
+            if(newBoard != null) {
+                log.info("newBoard 성공");
                 return new ResponseEntity<>(newBoard, HttpStatus.OK);
-            else
+            }
+            else {
+                log.info("newBoard는 null");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } catch (Exception e) {
+            log.info("newBoard 예외 발생 !!!");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
     @PutMapping()
-    public ResponseEntity<?> update(@RequestBody Board board) {
+    // public ResponseEntity<?> update(@RequestBody Board board) {
+    public ResponseEntity<?> update(Board board) {
         try {
-            log.info(board.toString());
             int result = boardService.update(board);
-            Board updateBoard = boardService.select(board.getNo());
-            return new ResponseEntity<>(updateBoard, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
     @DeleteMapping("/{no}")
-    public ResponseEntity<?> destroy(@PathVariable Integer no) {
+    public ResponseEntity<?> delete(@PathVariable("no") int no) {
         try {
             int result = boardService.delete(no);
-            List<Board> boardList = boardService.list();
-            return new ResponseEntity<>(boardList, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
 }

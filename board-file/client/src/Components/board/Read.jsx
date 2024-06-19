@@ -2,6 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from '../board/css/read.module.css'
 import '../board/css/read.css'
+import * as format from '../../apis/format'
+// ckeditor5
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const Read = ({board, fileList, isLoading, onDownload}) => {
 
@@ -53,7 +57,14 @@ const Read = ({board, fileList, isLoading, onDownload}) => {
                     </tr>
                     <tr>
                         <td colSpan={2}>
-                            <textarea cols="40" rows="10" value={board.content} readOnly className={styles['form-input']}></textarea>
+                            {/* <textarea cols="40" rows="10" value={board.content} readOnly className={styles['form-input']}></textarea> */}
+                            <CKEditor editor={ ClassicEditor }
+                                     data={ board.content }           // 조회할 데이터 커텐츠 
+                                     disabled={true}
+                                     config={{
+                                         toolbar: [],
+                                     }}
+                            />
                         </td>
                     </tr>
                     <tr>
@@ -65,7 +76,8 @@ const Read = ({board, fileList, isLoading, onDownload}) => {
                                 fileList.map( (file) => (
                                     <div className="flex-box" key={file.no}>
                                         <div className="item">
-                                            <span>{file.fileName}</span>
+                                            <img src={`/files/img/${file.no}`} alt={file.fileName} />
+                                            <span>{file.originName} ({format.byteToUnit(file.fileSize) })</span>
                                         </div>
                                         <div className="item">
                                             <button className="btn" onClick={() => handleDownload(file.no, file.originName)}>다운로드</button>
