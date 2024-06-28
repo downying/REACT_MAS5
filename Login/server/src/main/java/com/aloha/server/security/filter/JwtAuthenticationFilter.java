@@ -50,6 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         
+        log.info("로그인 인증 시도 메소드 작동 : attemptAuthentication()");        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -58,6 +59,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 사용자 인증정보 객체 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+        
+
+         // // 사용자 인증정보 객체 생성
+        // Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
+
+        // try {
+        //     // 사용자 인증 (로그인)
+        //     authentication = authenticationManager.authenticate(authentication);
+        // } catch (Exception e) {
+        //     log.info("error" + e);
+        // }
 
         // 사용자 인증 (로그인)
         authentication = authenticationManager.authenticate(authentication);
@@ -106,7 +118,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("인증 성공 (auth SUCCESS) : ");
 
         CustomUser user = ((CustomUser) authentication.getPrincipal());
-        int userNo = user.getUser().getNo();
+        int userNo = user.getUser().getUserNo();
         String userId = user.getUser().getUserId();
 
         List<String> roles = user.getAuthorities()
@@ -122,14 +134,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(200);
     }
 
-
-
-    
-
-    
-
-
-
-    
-    
+ 
 }
+

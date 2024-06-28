@@ -120,7 +120,7 @@ public class JwtTokenProvider {
 
 
             Users user = new Users();
-            user.setNo(no);
+            user.setUserNo(no);
             user.setUserId(userId);
             // OK: 권한도 바로 Users 객체에 담아보기
             List<UserAuth> authList = ((List<?>) roles )
@@ -139,10 +139,10 @@ public class JwtTokenProvider {
             // 토큰 유효하면
             // name, email 도 담아주기
             try {
-                Users userInfo = userMapper.select(no);
+                Users userInfo = userMapper.select(userId);
                 if( userInfo != null ) {
-                    user.setName(userInfo.getName());
-                    user.setEmail(userInfo.getEmail());
+                    user.setUserName(userInfo.getUserName());
+                    user.setUserId(userInfo.getUserId());
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());

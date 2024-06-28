@@ -42,6 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         //✅ Bearer + {jwt} 체크
         // 헤더가 없거나 형식이 올바르지 않으면 다음 필터로 진행
         if (header == null || header.length() == 0 || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+            log.info("헤더가 없대잖아 다운아!!!!!!!!!!!");
             filterChain.doFilter(request, response);
             return;
         }
